@@ -33,9 +33,7 @@ class StateService {
             objDTO: StateDTO,
             obj: State) {
 
-        if (objDTO.name != "") {
-            obj.name = objDTO.name
-        }
+        if (objDTO.name != "") obj.name = objDTO.name
 
         // Add exception handler to deal with empty names
     }
