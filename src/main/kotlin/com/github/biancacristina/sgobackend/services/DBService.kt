@@ -24,6 +24,9 @@ class DBService {
     @Autowired
     private lateinit var laborRepository: LaborRepository
 
+    @Autowired
+    private lateinit var typeOfCostAggregationRepository: TypeOfCostAggregationRepository
+
     fun instantiateTestDataBase(): Unit {
         var e1 = State(0, "Minas Gerais")
         var e2 = State(0, "Rio de Janeiro")
@@ -72,5 +75,10 @@ class DBService {
         laborRepository.saveAll(Arrays.asList(l1,l2))
         clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
         typeOfLaborRepository.saveAll(Arrays.asList(tl1,tl2,tl3))
+
+        var tca1 = TypeOfCostAggregation(0, "Ag 1")
+        var tca2 = TypeOfCostAggregation(0, "Ag 2")
+
+        typeOfCostAggregationRepository.saveAll(Arrays.asList(tca1, tca2))
     }
 }
