@@ -8,7 +8,7 @@ data class TypeOfLabor (
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     var id: Long,
 
-    var typeOfLabor: String
+    var name: String
 ) {
 
     @JsonIgnore
