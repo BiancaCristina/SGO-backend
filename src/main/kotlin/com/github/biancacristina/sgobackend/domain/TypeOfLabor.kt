@@ -4,17 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
-data class Cluster (
+data class TypeOfLabor (
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     var id: Long,
 
-    var name: String,
-
-    @ManyToOne
-    @JoinColumn(name="city_id")
-    var city: City
+    var typeOfLabor: String
 ) {
+
     @JsonIgnore
-    @OneToMany(mappedBy= "cluster")
+    @OneToMany(mappedBy= "typeOfLabor")
     var labors = mutableSetOf<Labor>()
 }
