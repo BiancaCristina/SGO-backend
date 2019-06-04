@@ -1,8 +1,10 @@
 package com.github.biancacristina.sgobackend.services
 
 import com.github.biancacristina.sgobackend.domain.City
+import com.github.biancacristina.sgobackend.domain.Cluster
 import com.github.biancacristina.sgobackend.domain.State
 import com.github.biancacristina.sgobackend.repositories.CityRepository
+import com.github.biancacristina.sgobackend.repositories.ClusterRepository
 import com.github.biancacristina.sgobackend.repositories.StateRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -17,6 +19,9 @@ class DBService {
     @Autowired
     private lateinit var stateRepository: StateRepository
 
+    @Autowired
+    private lateinit var clusterRepository: ClusterRepository
+
     fun instantiateTestDataBase(): Unit {
         var e1 = State(0, "Minas Gerais")
         var e2 = State(0, "Rio de Janeiro")
@@ -30,5 +35,11 @@ class DBService {
 
         cityRepository.saveAll(Arrays.asList(c1,c2,c3))
         stateRepository.saveAll(Arrays.asList(e1,e2,e3))
+
+        var clu1 = Cluster(0, "Vila Maria", c1)
+        var clu2 = Cluster(0, "Nova Uberlândia", c1)
+        var clu3 = Cluster(0, "Higienopólis", c3)
+
+        clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
     }
 }

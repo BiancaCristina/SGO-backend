@@ -1,5 +1,6 @@
 package com.github.biancacristina.sgobackend.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -12,4 +13,8 @@ data class City(
     @ManyToOne
     @JoinColumn(name="state_id")
     var state: State
-)
+) {
+    @JsonIgnore
+    @OneToMany(mappedBy="city")
+    var clusters = mutableSetOf<Cluster>()
+}
