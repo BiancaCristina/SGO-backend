@@ -7,12 +7,11 @@ data class Labor (
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     var id: Long,
 
-    var estimate_service: Float,
-    var estimate_infra: Float,
-    var estimate_material: Float,
-    var estimate_eletronic: Float,
-    var estimate_others: Float,
-    var estimate_total: Float,
+    var estimate_service: Double,
+    var estimate_infra: Double,
+    var estimate_material: Double,
+    var estimate_eletronic: Double,
+    var estimate_others: Double,
 
     @ManyToOne
     @JoinColumn(name="cluster_id")
@@ -23,12 +22,9 @@ data class Labor (
     var typeOfLabor: TypeOfLabor
 
 ) {
-    init {
-        estimate_total =
-                estimate_service +
-                estimate_infra +
-                estimate_material +
-                estimate_eletronic +
-                estimate_others
-    }
+    var estimate_total: Double = estimate_service +
+                                    estimate_infra +
+                                    estimate_material +
+                                    estimate_eletronic +
+                                    estimate_others
 }
