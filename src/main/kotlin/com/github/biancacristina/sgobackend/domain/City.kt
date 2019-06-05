@@ -17,4 +17,8 @@ data class City(
     @JsonIgnore
     @OneToMany(mappedBy="city")
     var clusters = mutableSetOf<Cluster>()
+
+    @JsonIgnore
+    @OneToMany(mappedBy="city")
+    var projects = mutableSetOf<Project>()
 }

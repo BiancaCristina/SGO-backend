@@ -1,10 +1,13 @@
 package com.github.biancacristina.sgobackend.domain
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.github.biancacristina.sgobackend.domain.enums.Status
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-data class Labor (
+data class Project (
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     var id: Long,
 
@@ -14,23 +17,22 @@ data class Labor (
     var estimate_eletronic: Double?,
     var estimate_others: Double?,
 
-    @ManyToOne
-    @JoinColumn(name="cluster_id")
-    var cluster: Cluster,
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
+    var estimate_startDate: LocalDateTime,
+
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
+    var estimate_endDate: LocalDateTime,
 
     @ManyToOne
-    @JoinColumn(name="typeOfLabor_id")
-    var typeOfLabor: TypeOfLabor,
+    @JoinColumn(name="city_id")
+    var city: City,
 
-    @ManyToOne
-    @JoinColumn(name="costAggregation_id")
-    var costAggregation: CostAggregation
+    @OneToMany(mappedBy= "project")
+    var labors: MutableSet<Labor>,
+
+    @Enumerated
+    var status: Status
 ) {
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="project_id")
-    lateinit var project: Project
-
     var estimate_total: Double? = 0.0
 
     init {

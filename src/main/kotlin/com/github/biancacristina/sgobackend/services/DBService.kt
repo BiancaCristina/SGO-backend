@@ -1,6 +1,7 @@
 package com.github.biancacristina.sgobackend.services
 
 import com.github.biancacristina.sgobackend.domain.*
+import com.github.biancacristina.sgobackend.domain.enums.Status
 import com.github.biancacristina.sgobackend.repositories.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -32,6 +33,9 @@ class DBService {
 
     @Autowired
     private lateinit var costAggregationRepository: CostAggregationRepository
+
+    @Autowired
+    private lateinit var projectRepository: ProjectRepository
 
     fun instantiateTestDataBase(): Unit {
         var e1 = State(0, "Minas Gerais")
@@ -103,6 +107,37 @@ class DBService {
         laborRepository.saveAll(Arrays.asList(l1,l2))
         clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
         typeOfLaborRepository.saveAll(Arrays.asList(tl1,tl2,tl3))
+
+        var str_Date = "09/01/1999 12:01"
+        var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+        var date = LocalDateTime.parse(str_Date, formatter)
+
+        var str_Date2 = "24/11/2010 07:14"
+        var date2 = LocalDateTime.parse(str_Date2, formatter)
+
+        var labors = mutableSetOf<Labor>()
+        labors.add(l1)
+        labors.add(l2)
+
+        var p1 = Project(
+                0,
+                4854.21,
+                211000.43,
+                654987.12,
+                5111234.90,
+                4433423.45,
+                date,
+                date2,
+                c1,
+                labors,
+                Status.ACIONADO
+        )
+
+        l1.project = p1
+        l2.project = p1
+
+        projectRepository.save(p1)
+        laborRepository.saveAll(Arrays.asList(l1,l2))
 
     }
 }

@@ -1,6 +1,7 @@
 package com.github.biancacristina.sgobackend.domain.enums
 
 enum class Status constructor(val cod: Int, val status: String) {
+    INDEFINIDO(0, "INDEFINIDO"),
     ACIONADO(1, "ACIONADO"),
     EM_ELABORACAO(2, "EM ELABORAÇÃO"),
     EM_ANALISE(3, "EM ANÁLISE"),
