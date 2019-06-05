@@ -18,6 +18,9 @@ class LaborService {
     @Autowired
     private lateinit var clusterService: ClusterService
 
+    @Autowired
+    private lateinit var costAggregationService: CostAggregationService
+
     fun findById(id: Long): Labor {
         return laborRepository.findById(id).orElse(null)
     }
@@ -58,7 +61,9 @@ class LaborService {
     fun fromDTO(objDTO: LaborDTO): Labor {
         var typeOfLabor = typeOfLaborService.findById(objDTO.id_typeOfLabor)
         var cluster = clusterService.findById(objDTO.id_cluster)
+        var costAggregation = costAggregationService.findById(objDTO.id_costAggregation)
 
+        System.out.println(typeOfLabor.name)
         var obj = Labor(
                 objDTO.id,
                 objDTO.estimate_service!!,
@@ -67,7 +72,8 @@ class LaborService {
                 objDTO.estimate_eletronic!!,
                 objDTO.estimate_others!!,
                 cluster,
-                typeOfLabor
+                typeOfLabor,
+                costAggregation
         )
 
         // Add exception handler for the case when objDTO has something NULL

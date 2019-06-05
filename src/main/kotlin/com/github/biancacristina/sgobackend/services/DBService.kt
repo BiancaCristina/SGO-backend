@@ -4,6 +4,9 @@ import com.github.biancacristina.sgobackend.domain.*
 import com.github.biancacristina.sgobackend.repositories.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
@@ -27,6 +30,9 @@ class DBService {
     @Autowired
     private lateinit var typeOfCostAggregationRepository: TypeOfCostAggregationRepository
 
+    @Autowired
+    private lateinit var costAggregationRepository: CostAggregationRepository
+
     fun instantiateTestDataBase(): Unit {
         var e1 = State(0, "Minas Gerais")
         var e2 = State(0, "Rio de Janeiro")
@@ -48,6 +54,25 @@ class DBService {
         clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
         cityRepository.saveAll(Arrays.asList(c1,c2,c3))
 
+        var tca1 = TypeOfCostAggregation(0, "Ag 1")
+        var tca2 = TypeOfCostAggregation(0, "Ag 2")
+
+        typeOfCostAggregationRepository.saveAll(Arrays.asList(tca1, tca2))
+
+        var ca1 = CostAggregation(
+                0,
+                "Concessão",
+                tca1
+            )
+
+        var ca2 = CostAggregation(
+                0,
+                "Expansão",
+                tca1
+        )
+
+        costAggregationRepository.saveAll(Arrays.asList(ca1,ca2))
+
         var tl1 = TypeOfLabor(0, "Pequena")
         var tl2 = TypeOfLabor(0, "Média")
         var tl3 = TypeOfLabor(0, "Grande")
@@ -61,7 +86,8 @@ class DBService {
                 43.10,
                 54.11,
                 clu1,
-                tl1)
+                tl1,
+                ca1)
 
         var l2 = Labor(0,
                 454.21,
@@ -70,15 +96,13 @@ class DBService {
                 534.90,
                 745645.45,
                 clu2,
-                tl2)
+                tl2,
+                ca2)
 
+        costAggregationRepository.saveAll(Arrays.asList(ca1,ca2))
         laborRepository.saveAll(Arrays.asList(l1,l2))
         clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
         typeOfLaborRepository.saveAll(Arrays.asList(tl1,tl2,tl3))
 
-        var tca1 = TypeOfCostAggregation(0, "Ag 1")
-        var tca2 = TypeOfCostAggregation(0, "Ag 2")
-
-        typeOfCostAggregationRepository.saveAll(Arrays.asList(tca1, tca2))
     }
 }

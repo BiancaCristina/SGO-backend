@@ -19,7 +19,11 @@ data class Labor (
 
     @ManyToOne
     @JoinColumn(name="typeOfLabor_id")
-    var typeOfLabor: TypeOfLabor
+    var typeOfLabor: TypeOfLabor,
+
+    @ManyToOne
+    @JoinColumn(name="costAggregation_id")
+    var costAggregation: CostAggregation
 
 ) {
     var estimate_total: Double = estimate_service +

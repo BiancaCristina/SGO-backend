@@ -8,5 +8,6 @@ data class LaborDTO (
     var estimate_eletronic: Double?,
     var estimate_others: Double?,
     var id_cluster: Long,
-    var id_typeOfLabor: Long
+    var id_typeOfLabor: Long,
+    var id_costAggregation: Long
 )
