@@ -2,6 +2,7 @@ package com.github.biancacristina.sgobackend.services
 
 import com.github.biancacristina.sgobackend.domain.Labor
 import com.github.biancacristina.sgobackend.dto.LaborDTO
+import com.github.biancacristina.sgobackend.dto.LaborUpdateDTO
 import com.github.biancacristina.sgobackend.repositories.LaborRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -21,6 +22,9 @@ class LaborService {
     @Autowired
     private lateinit var costAggregationService: CostAggregationService
 
+    @Autowired
+    private lateinit var projectService: ProjectService
+
     fun findById(id: Long): Labor {
         return laborRepository.findById(id).orElse(null)
     }
@@ -38,6 +42,13 @@ class LaborService {
         laborRepository.save(obj)
     }
 
+    fun update(objDTO: LaborUpdateDTO, id: Long) {
+        var obj = this.findById(id)
+        updateProject(objDTO, obj)
+
+        laborRepository.save(obj)
+    }
+
     protected fun updateData(
         objDTO: LaborDTO,
         obj: Labor) {
@@ -49,6 +60,15 @@ class LaborService {
         obj.estimate_others = objDTO.estimate_others?:obj.estimate_others
 
         // Add exception handler for the case when is null
+    }
+
+    protected fun updateProject(
+        objDTO: LaborUpdateDTO,
+        obj: Labor
+    ) {
+        var project = projectService.findById(objDTO.id_project!!)
+
+        obj.project = project
     }
 
     fun deleteById(id: Long) {

@@ -3,10 +3,13 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.Labor
 import com.github.biancacristina.sgobackend.domain.Project
 import com.github.biancacristina.sgobackend.domain.enums.Status
+import com.github.biancacristina.sgobackend.dto.LaborUpdateDTO
 import com.github.biancacristina.sgobackend.dto.ProjectNewDTO
 import com.github.biancacristina.sgobackend.repositories.ProjectRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class ProjectService {
@@ -28,7 +31,22 @@ class ProjectService {
         obj.id = 0
         obj.status = Status.ACIONADO
 
-        return projectRepository.save(obj)
+        var objSave = projectRepository.save(obj)
+
+        // Update the labors present in obj
+        for(labor in objSave.labors) {
+            var laborDTO = LaborUpdateDTO(
+                    labor.id,
+                    null,
+                    null,
+                    null,
+                    obj.id
+            )
+
+            laborService.update(laborDTO, labor.id)
+        }
+
+        return objSave
     }
 
     fun deleteById(id: Long) {
@@ -54,6 +72,10 @@ class ProjectService {
             labors.add(labor)
         }
 
+        var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+        var dateStart = LocalDateTime.parse(objDTO.estimate_startDate, formatter)
+        var dateEnd = LocalDateTime.parse(objDTO.estimate_endDate, formatter)
+
         var obj = Project(
                 0,
                 objDTO.estimate_service,
@@ -61,8 +83,8 @@ class ProjectService {
                 objDTO.estimate_material,
                 objDTO.estimate_eletronic,
                 objDTO.estimate_others,
-                objDTO.estimate_startDate,
-                objDTO.estimate_endDate,
+                dateStart,
+                dateEnd,
                 city,
                 labors,
                 Status.INDEFINIDO

@@ -1,6 +1,7 @@
 package com.github.biancacristina.sgobackend.resources
 
 import com.github.biancacristina.sgobackend.dto.LaborDTO
+import com.github.biancacristina.sgobackend.dto.LaborUpdateDTO
 import com.github.biancacristina.sgobackend.services.LaborService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
