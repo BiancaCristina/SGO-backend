@@ -35,23 +35,8 @@ class LaborService {
         return laborRepository.save(obj)
     }
 
-    fun update(objDTO: LaborDTO, id: Long) {
+    fun updateEstimate(objDTO: LaborDTO, id: Long) {
         var obj = this.findById(id)
-        updateData(objDTO, obj)
-
-        laborRepository.save(obj)
-    }
-
-    fun update(objDTO: LaborUpdateDTO, id: Long) {
-        var obj = this.findById(id)
-        updateProject(objDTO, obj)
-
-        laborRepository.save(obj)
-    }
-
-    protected fun updateData(
-        objDTO: LaborDTO,
-        obj: Labor) {
 
         obj.estimate_service = objDTO.estimate_service?:obj.estimate_service
         obj.estimate_infra = objDTO.estimate_infra?:obj.estimate_infra
@@ -60,15 +45,63 @@ class LaborService {
         obj.estimate_others = objDTO.estimate_others?:obj.estimate_others
 
         // Add exception handler for the case when is null
+
+        // Update estimate_total
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_service?:0.0)
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_infra?:0.0)
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_material?:0.0)
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_eletronic?:0.0)
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_others?:0.0)
+
+        laborRepository.save(obj)
     }
 
-    protected fun updateProject(
-        objDTO: LaborUpdateDTO,
-        obj: Labor
+    fun updateCluster(
+        idCluster: Long,
+        idLabor: Long
     ) {
-        var project = projectService.findById(objDTO.id_project!!)
+        var obj = this.findById(idLabor)
+        var cluster = clusterService.findById(idCluster)
+
+        obj.cluster = cluster
+
+        laborRepository.save(obj)
+    }
+
+    fun updateTypeOfLabor(
+        idTypeOfLabor: Long,
+        idLabor: Long
+    ) {
+        var obj = this.findById(idLabor)
+        var typeOfLabor = typeOfLaborService.findById(idTypeOfLabor)
+
+        obj.typeOfLabor = typeOfLabor
+
+        laborRepository.save(obj)
+    }
+
+    fun updateCostAggregation(
+        idCostAggregation: Long,
+        idLabor: Long
+    ) {
+        var obj = this.findById(idLabor)
+        var costAggregation = costAggregationService.findById(idCostAggregation)
+
+        obj.costAggregation = costAggregation
+
+        laborRepository.save(obj)
+    }
+
+    fun updateProject(
+        idProject: Long,
+        idLabor: Long
+    ) {
+        var obj = this.findById(idLabor)
+        var project = projectService.findById(idProject)
 
         obj.project = project
+
+        laborRepository.save(obj)
     }
 
     fun deleteById(id: Long) {

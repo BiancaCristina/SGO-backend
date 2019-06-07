@@ -57,12 +57,62 @@ class LaborResource {
         return ResponseEntity.created(uri2).build()
     }
 
-    @RequestMapping(value=["/{id}"], method=[RequestMethod.PUT])
-    fun update(
+    @RequestMapping(value=["/updateEstimate/{id}"], method=[RequestMethod.PUT])
+    fun updateEstimate(
         @PathVariable id: Long,
         @Valid @RequestBody objDTO: LaborDTO
     ): ResponseEntity<Unit> {
-        laborService.update(objDTO, id)
+        laborService.updateEstimate(objDTO, id)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(
+            value=["/updateCluster/{idLabor}/{idCluster}"],
+            method=[RequestMethod.PUT])
+    fun updateCluster(
+        @PathVariable idLabor: Long,
+        @PathVariable idCluster: Long
+    ): ResponseEntity<Unit> {
+        laborService.updateCluster(idCluster, idLabor)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(
+            value=["/updateTypeOfLabor/{idLabor}/{idTypeOfLabor}"],
+            method=[RequestMethod.PUT])
+    fun updateTypeOfLabor(
+        @PathVariable idLabor: Long,
+        @PathVariable idTypeOfLabor: Long
+    ): ResponseEntity<Unit>{
+        laborService.updateTypeOfLabor(idTypeOfLabor, idLabor)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(
+            value=["/updateCostAggregation/{idLabor}/{idCostAggregation}"],
+            method=[RequestMethod.PUT]
+    )
+    fun updateCostAggregation(
+        @PathVariable idLabor: Long,
+        @PathVariable idCostAggregation: Long
+    ): ResponseEntity<Unit> {
+        laborService.updateCostAggregation(idCostAggregation, idLabor)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(
+            value=["/updateProject/{idLabor}/{idProject}"],
+            method=[RequestMethod.PUT]
+    )
+    fun updateProject(
+        @PathVariable idLabor: Long,
+        @PathVariable idProject: Long
+    ): ResponseEntity<Unit> {
+        laborService.updateProject(idProject, idLabor)
 
         return ResponseEntity.noContent().build()
     }
