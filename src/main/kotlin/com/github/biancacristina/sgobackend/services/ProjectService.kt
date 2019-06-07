@@ -1,9 +1,7 @@
 package com.github.biancacristina.sgobackend.services
 
-import com.github.biancacristina.sgobackend.domain.Labor
 import com.github.biancacristina.sgobackend.domain.Project
 import com.github.biancacristina.sgobackend.domain.enums.Status
-import com.github.biancacristina.sgobackend.dto.LaborUpdateDTO
 import com.github.biancacristina.sgobackend.dto.ProjectNewDTO
 import com.github.biancacristina.sgobackend.repositories.ProjectRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,26 +25,22 @@ class ProjectService {
         return projectRepository.findById(id).orElse(null)
     }
 
-    fun insert(obj: Project): Project {
+    fun insert(objDTO: ProjectNewDTO): Project {
+        var obj = fromDTO(objDTO)
         obj.id = 0
         obj.status = Status.ACIONADO
 
-        var objSave = projectRepository.save(obj)
+        projectRepository.save(obj)
 
-        // Update the labors present in obj
-        for(labor in objSave.labors) {
-            var laborDTO = LaborUpdateDTO(
-                    labor.id,
-                    null,
-                    null,
-                    null,
-                    obj.id
-            )
-
-            laborService.update(laborDTO, labor.id)
+        // Create the labors from objDTO.laborsDTO
+        for (laborDTO in objDTO.laborsDTO!!) {
+            laborDTO.id_project = obj.id
+            var labor = laborService.fromDTO(laborDTO)
+            laborService.insert(labor)
+            obj.labors.add(labor)
         }
 
-        return objSave
+        return projectRepository.save(obj)
     }
 
     fun updateEstimate(
@@ -79,20 +73,11 @@ class ProjectService {
 
     fun fromDTO(objDTO: ProjectNewDTO): Project {
         // Conversion used only for insertion
+        // Also create the labors from the LaborDTO
 
         var city = cityService.findById(objDTO.id_city!!)
-        var labors = mutableSetOf<Labor>()
 
-        for (id_labor in objDTO.ids_labors!!) {
-            // Create a mutableSet of Labor using the ids_labors
-
-            var labor = laborService.findById(id_labor!!)
-
-            // Add here the update of labor to include the project
-
-            labors.add(labor)
-        }
-
+        // Create the dates
         var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
         var dateStart = LocalDateTime.parse(objDTO.estimate_startDate, formatter)
         var dateEnd = LocalDateTime.parse(objDTO.estimate_endDate, formatter)
@@ -107,7 +92,6 @@ class ProjectService {
                 dateStart,
                 dateEnd,
                 city,
-                labors,
                 Status.INDEFINIDO
         )
 

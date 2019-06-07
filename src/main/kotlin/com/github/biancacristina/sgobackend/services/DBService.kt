@@ -83,30 +83,6 @@ class DBService {
 
         typeOfLaborRepository.saveAll(Arrays.asList(tl1,tl2,tl3))
 
-        var l1 = Labor(0,
-                123.12,
-                678.78,
-                988.90,
-                43.10,
-                54.11,
-                clu1,
-                tl1,
-                ca1)
-
-        var l2 = Labor(0,
-                454.21,
-                1000.43,
-                987.12,
-                534.90,
-                745645.45,
-                clu2,
-                tl2,
-                ca2)
-
-        costAggregationRepository.saveAll(Arrays.asList(ca1,ca2))
-        laborRepository.saveAll(Arrays.asList(l1,l2))
-        clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
-        typeOfLaborRepository.saveAll(Arrays.asList(tl1,tl2,tl3))
 
         var str_Date = "09/01/1999 12:01"
         var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
@@ -114,10 +90,6 @@ class DBService {
 
         var str_Date2 = "24/11/2010 07:14"
         var date2 = LocalDateTime.parse(str_Date2, formatter)
-
-        var labors = mutableSetOf<Labor>()
-        labors.add(l1)
-        labors.add(l2)
 
         var p1 = Project(
                 0,
@@ -129,15 +101,45 @@ class DBService {
                 date,
                 date2,
                 c1,
-                labors,
                 Status.ACIONADO
         )
 
-        l1.project = p1
-        l2.project = p1
+        projectRepository.save(p1)
+
+        var l1 = Labor(0,
+                123.12,
+                678.78,
+                988.90,
+                43.10,
+                54.11,
+                clu1,
+                tl1,
+                ca1,
+                p1)
+
+        var l2 = Labor(0,
+                454.21,
+                1000.43,
+                987.12,
+                534.90,
+                745645.45,
+                clu2,
+                tl2,
+                ca2,
+                p1)
+
+        costAggregationRepository.saveAll(Arrays.asList(ca1,ca2))
+        laborRepository.saveAll(Arrays.asList(l1,l2))
+        clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
+        typeOfLaborRepository.saveAll(Arrays.asList(tl1,tl2,tl3))
+
+        var labors = mutableSetOf<Labor>()
+        labors.add(l1)
+        labors.add(l2)
+        p1.labors.add(l1)
+        p1.labors.add(l2)
 
         projectRepository.save(p1)
-        laborRepository.saveAll(Arrays.asList(l1,l2))
 
     }
 }

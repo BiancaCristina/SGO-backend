@@ -24,8 +24,7 @@ class ProjectResource {
 
     @RequestMapping(method=[RequestMethod.POST])
     fun insert(@Valid @RequestBody objDTO: ProjectNewDTO): ResponseEntity<Unit> {
-        var obj = projectService.fromDTO(objDTO)
-        obj = projectService.insert(obj)
+        var obj = projectService.insert(objDTO)
 
         // Create the URI of the object inserted
         val uri = ServletUriComponentsBuilder

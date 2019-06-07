@@ -10,7 +10,7 @@ data class ProjectNewDTO (
     var estimate_startDate: String?,
     var estimate_endDate: String?,
     var id_city: Long?,
-    var ids_labors: MutableSet<Long>?
+    var laborsDTO: MutableSet<LaborDTO>?
 ) {
     init {
         // Indicates that if the value is null, so the value is 0

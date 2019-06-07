@@ -24,13 +24,13 @@ data class Labor (
 
     @ManyToOne
     @JoinColumn(name="costAggregation_id")
-    var costAggregation: CostAggregation
-) {
+    var costAggregation: CostAggregation,
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="project_id")
-    lateinit var project: Project
-
+    var project: Project
+) {
     var estimate_total: Double? = 0.0
 
     init {

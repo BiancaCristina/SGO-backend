@@ -82,6 +82,7 @@ class LaborService {
         var typeOfLabor = typeOfLaborService.findById(objDTO.id_typeOfLabor)
         var cluster = clusterService.findById(objDTO.id_cluster)
         var costAggregation = costAggregationService.findById(objDTO.id_costAggregation)
+        var project = projectService.findById(objDTO.id_project!!)
 
         System.out.println(typeOfLabor.name)
         var obj = Labor(
@@ -93,7 +94,8 @@ class LaborService {
                 objDTO.estimate_others!!,
                 cluster,
                 typeOfLabor,
-                costAggregation
+                costAggregation,
+                project
         )
 
         // Add exception handler for the case when objDTO has something NULL

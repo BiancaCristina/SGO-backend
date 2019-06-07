@@ -27,12 +27,12 @@ data class Project (
     @JoinColumn(name="city_id")
     var city: City,
 
-    @OneToMany(mappedBy= "project")
-    var labors: MutableSet<Labor>,
-
     @Enumerated
     var status: Status
 ) {
+    @OneToMany(mappedBy= "project")
+    var labors = mutableSetOf<Labor>()
+
     var estimate_total: Double? = 0.0
 
     init {
