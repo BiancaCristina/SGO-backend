@@ -49,6 +49,27 @@ class ProjectService {
         return objSave
     }
 
+    fun updateEstimate(
+            objDTO: ProjectNewDTO,
+            id: Long) {
+        var obj = this.findById(id)
+        updateEstimate(objDTO, obj)
+
+        projectRepository.save(obj)
+    }
+
+    protected fun updateEstimate(
+            objDTO: ProjectNewDTO,
+            obj: Project) {
+        // Update the estimates
+
+        obj.estimate_service = objDTO.estimate_service
+        obj.estimate_infra = objDTO.estimate_infra
+        obj.estimate_material = objDTO.estimate_material
+        obj.estimate_eletronic = objDTO.estimate_eletronic
+        obj.estimate_others = objDTO.estimate_others
+    }
+
     fun deleteById(id: Long) {
         this.findById(id)
         projectRepository.deleteById(id)
@@ -59,13 +80,13 @@ class ProjectService {
     fun fromDTO(objDTO: ProjectNewDTO): Project {
         // Conversion used only for insertion
 
-        var city = cityService.findById(objDTO.id_city)
+        var city = cityService.findById(objDTO.id_city!!)
         var labors = mutableSetOf<Labor>()
 
-        for (id_labor in objDTO.ids_labors) {
+        for (id_labor in objDTO.ids_labors!!) {
             // Create a mutableSet of Labor using the ids_labors
 
-            var labor = laborService.findById(id_labor)
+            var labor = laborService.findById(id_labor!!)
 
             // Add here the update of labor to include the project
 

@@ -35,4 +35,21 @@ class ProjectResource {
 
         return ResponseEntity.created(uri).build()
     }
+
+    @RequestMapping(value=["{id}"], method=[RequestMethod.PUT])
+    fun updateEstimate(
+            @PathVariable id: Long,
+            @Valid @RequestBody objDTO: ProjectNewDTO
+    ): ResponseEntity<Unit> {
+        projectService.updateEstimate(objDTO, id)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(value=["/{id}"], method=[RequestMethod.DELETE])
+    fun deleteById(@PathVariable id: Long): ResponseEntity<Unit> {
+        projectService.deleteById(id)
+
+        return ResponseEntity.noContent().build()
+    }
 }
