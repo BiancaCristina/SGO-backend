@@ -50,12 +50,22 @@ class ClusterResource {
         return ResponseEntity.created(uri2).build()
     }
 
-    @RequestMapping(value=["/{id}"], method=[RequestMethod.PUT])
-    fun update(
+    @RequestMapping(value=["/updateName/{id}"], method=[RequestMethod.PUT])
+    fun updateName(
         @PathVariable id: Long,
         @Valid @RequestBody newObjDTO: ClusterNewDTO
     ): ResponseEntity<Unit> {
-        clusterService.update(newObjDTO, id)
+        clusterService.updateName(newObjDTO, id)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(value=["/updateCity/{id}"], method=[RequestMethod.PUT])
+    fun updateCity(
+        @PathVariable id: Long,
+        @Valid @RequestBody newObjDTO: ClusterNewDTO
+    ): ResponseEntity<Unit> {
+        clusterService.updateCity(newObjDTO, id)
 
         return ResponseEntity.noContent().build()
     }
