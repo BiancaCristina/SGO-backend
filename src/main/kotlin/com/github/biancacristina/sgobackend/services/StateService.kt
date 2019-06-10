@@ -24,18 +24,10 @@ class StateService {
 
     fun updateName(objDTO: StateDTO, id: Long) {
         var obj = this.findById(id)
-        updateName(objDTO, obj)
-
-        stateRepository.save(obj)
-    }
-
-    protected fun updateName(
-            objDTO: StateDTO,
-            obj: State) {
 
         if (objDTO.name != "") obj.name = objDTO.name
 
-        // Add exception handler to deal with empty names
+        stateRepository.save(obj)
     }
 
     fun deleteById(id: Long) {

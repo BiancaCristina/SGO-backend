@@ -120,11 +120,11 @@ class LaborService {
         System.out.println(typeOfLabor.name)
         var obj = Labor(
                 objDTO.id,
-                objDTO.estimate_service!!,
-                objDTO.estimate_infra!!,
-                objDTO.estimate_material!!,
-                objDTO.estimate_eletronic!!,
-                objDTO.estimate_others!!,
+                objDTO.estimate_service?:0.0,
+                objDTO.estimate_infra?:0.0,
+                objDTO.estimate_material?:0.0,
+                objDTO.estimate_eletronic?:0.0,
+                objDTO.estimate_others?:0.0,
                 cluster,
                 typeOfLabor,
                 costAggregation,

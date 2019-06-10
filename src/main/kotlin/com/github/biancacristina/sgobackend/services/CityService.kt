@@ -27,18 +27,10 @@ class CityService {
 
     fun updateName(newObjDTO: CityNewDTO, id: Long) {
         var obj = this.findById(id)
-        updateName(newObjDTO, obj)
-
-        cityRepository.save(obj)
-    }
-
-    protected fun updateName(
-            newObjDTO: CityNewDTO,
-            obj: City) {
 
         if (newObjDTO.name != "") obj.name = newObjDTO.name
 
-        // Add exception handler to deal with empty names
+        cityRepository.save(obj)
     }
 
     fun deleteById(id: Long) {

@@ -2,6 +2,7 @@ package com.github.biancacristina.sgobackend.services
 
 import com.github.biancacristina.sgobackend.domain.Project
 import com.github.biancacristina.sgobackend.domain.enums.Status
+import com.github.biancacristina.sgobackend.dto.LaborDTO
 import com.github.biancacristina.sgobackend.dto.ProjectNewDTO
 import com.github.biancacristina.sgobackend.repositories.ProjectRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -47,15 +48,6 @@ class ProjectService {
             objDTO: ProjectNewDTO,
             id: Long) {
         var obj = this.findById(id)
-        updateEstimate(objDTO, obj)
-
-        projectRepository.save(obj)
-    }
-
-    protected fun updateEstimate(
-            objDTO: ProjectNewDTO,
-            obj: Project) {
-        // Update the estimates
 
         obj.estimate_service = objDTO.estimate_service
         obj.estimate_infra = objDTO.estimate_infra
@@ -69,6 +61,66 @@ class ProjectService {
         obj.estimate_total = obj.estimate_total?.plus(obj.estimate_material?:0.0)
         obj.estimate_total = obj.estimate_total?.plus(obj.estimate_eletronic?:0.0)
         obj.estimate_total = obj.estimate_total?.plus(obj.estimate_others?:0.0)
+
+        projectRepository.save(obj)
+    }
+
+    fun updateDate(
+        objDTO: ProjectNewDTO,
+        id: Long
+    ) {
+        var obj = this.findById(id)
+        var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+
+        // Update the dates only if it's not null
+        if (!objDTO.estimate_startDate.isNullOrBlank()) {
+            obj.estimate_startDate = LocalDateTime.parse(objDTO.estimate_startDate, formatter)
+        }
+
+        if (!objDTO.estimate_endDate.isNullOrBlank()) {
+            obj.estimate_endDate = LocalDateTime.parse(objDTO.estimate_endDate, formatter)
+        }
+
+        projectRepository.save(obj)
+    }
+
+    fun updateCity(
+        idProject: Long,
+        idCity: Long
+    ) {
+        var obj = this.findById(idProject)
+        var city = cityService.findById(idCity)
+
+        obj.city = city
+
+        projectRepository.save(obj)
+    }
+
+    fun updateAddLabor(
+        id: Long,
+        laborDTO: LaborDTO
+    ) {
+        var obj = this.findById(id)
+        //laborDTO.id_project = obj.id
+
+        // Add labor
+        var labor = laborService.fromDTO(laborDTO)
+        laborService.insert(labor)
+        obj.labors.add(labor)
+
+        projectRepository.save(obj)
+    }
+
+    fun updateRemoveLabor(
+        idProject: Long,
+        idLabor: Long
+    ) {
+        var obj = this.findById(idProject)
+
+        // Remove an labor using its id
+        obj.labors.removeIf { it.id == idLabor }
+
+        projectRepository.save(obj)
     }
 
     fun deleteById(id: Long) {

@@ -27,22 +27,28 @@ class CostAggregationService {
         return costAggregationRepository.save(obj)
     }
 
-    fun update(
+    fun updateName(
         objDTO: CostAggregationDTO,
         id: Long
     ) {
         var obj = this.findById(id)
-        updateData(objDTO, obj)
+
+        if (objDTO.name != "") obj.name = objDTO.name
+
         costAggregationRepository.save(obj)
     }
 
-    protected fun updateData(
-        objDTO: CostAggregationDTO,
-        obj: CostAggregation
+    fun updateTypeOfCostAggregation(
+       idCostAggregation: Long,
+       idTypeOfCostAggregation: Long
     ) {
-        if (objDTO.name != "") obj.name = objDTO.name
+        var obj = this.findById(idCostAggregation)
+        var typeOfCostAggregation = typeOfCostAggregationService
+                            .findById(idTypeOfCostAggregation)
 
-        // Add exception handler for the case when the name is empty
+        obj.typeOfCostAggregation = typeOfCostAggregation
+
+        costAggregationRepository.save(obj)
     }
 
     fun deleteById(id: Long) {
@@ -54,7 +60,7 @@ class CostAggregationService {
 
     fun fromDTO(objDTO: CostAggregationDTO): CostAggregation {
         var typeOfCostAggregation = typeOfCostAggregationService
-                                    .findById(objDTO.id_typeOfCostAggregation)
+                                    .findById(objDTO.id_typeOfCostAggregation!!)
 
         var obj = CostAggregation(
                 0,

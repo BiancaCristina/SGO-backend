@@ -51,12 +51,24 @@ class CostAggregationResource {
         return ResponseEntity.created(uri2).build()
     }
 
-    @RequestMapping(value=["/{id}"], method=[RequestMethod.PUT])
-    fun update(
+    @RequestMapping(value=["/updateName/{id}"], method=[RequestMethod.PUT])
+    fun updateName(
         @PathVariable id: Long,
         @Valid @RequestBody objDTO: CostAggregationDTO
     ): ResponseEntity<Unit> {
-        costAggregationService.update(objDTO, id)
+        costAggregationService.updateName(objDTO, id)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(
+            value=["/updateTypeOfCostAggregation/{idCostAggregation}/{idTypeOfCostAggregation}"],
+            method=[RequestMethod.PUT])
+    fun updateTypeOfCostAggregation(
+        @PathVariable idCostAggregation: Long,
+        @PathVariable idTypeOfCostAggregation: Long
+    ): ResponseEntity<Unit> {
+        costAggregationService.updateTypeOfCostAggregation(idCostAggregation, idTypeOfCostAggregation)
 
         return ResponseEntity.noContent().build()
     }

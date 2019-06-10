@@ -1,7 +1,9 @@
 package com.github.biancacristina.sgobackend.resources
 
+import com.github.biancacristina.sgobackend.dto.LaborDTO
 import com.github.biancacristina.sgobackend.dto.ProjectNewDTO
 import com.github.biancacristina.sgobackend.services.ProjectService
+import org.apache.coyote.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -35,12 +37,53 @@ class ProjectResource {
         return ResponseEntity.created(uri).build()
     }
 
-    @RequestMapping(value=["{id}"], method=[RequestMethod.PUT])
+    @RequestMapping(value=["/updateEstimate/{id}"], method=[RequestMethod.PUT])
     fun updateEstimate(
             @PathVariable id: Long,
             @Valid @RequestBody objDTO: ProjectNewDTO
     ): ResponseEntity<Unit> {
         projectService.updateEstimate(objDTO, id)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(value=["/updateDate/{id}"], method=[RequestMethod.PUT])
+    fun updateDate(
+        @PathVariable id: Long,
+        @Valid @RequestBody objDTO: ProjectNewDTO
+    ): ResponseEntity<Unit> {
+        projectService.updateDate(objDTO, id)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(value=["/updateCity/{idProject}/{idCity}"], method=[RequestMethod.PUT])
+    fun updateCity(
+        @PathVariable idProject: Long,
+        @PathVariable idCity: Long
+    ): ResponseEntity<Unit> {
+        projectService.updateCity(idProject, idCity)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(value=["/updateAddLabor/{id}"], method=[RequestMethod.PUT])
+    fun updateAddLabor(
+        @PathVariable id: Long,
+        @Valid @RequestBody laborDTO: LaborDTO
+    ): ResponseEntity<Unit> {
+        laborDTO.id_project = id
+        projectService.updateAddLabor(id, laborDTO)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @RequestMapping(value=["/updateRemoveLabor/{idProject}/{idLabor}"], method=[RequestMethod.PUT])
+    fun updateRemoveLabor (
+        @PathVariable idProject: Long,
+        @PathVariable idLabor: Long
+    ): ResponseEntity<Unit> {
+        projectService.updateRemoveLabor(idProject, idLabor)
 
         return ResponseEntity.noContent().build()
     }
