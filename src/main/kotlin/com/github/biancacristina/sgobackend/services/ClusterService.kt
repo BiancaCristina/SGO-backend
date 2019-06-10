@@ -29,7 +29,8 @@ class ClusterService {
             newObjDTO: ClusterNewDTO,
             id: Long) {
         var obj = this.findById(id)
-        updateName(newObjDTO, obj)
+
+        if (newObjDTO.name != "") obj.name = newObjDTO.name?:obj.name
 
         clusterRepository.save(obj)
     }
@@ -38,28 +39,11 @@ class ClusterService {
         objDTO: ClusterNewDTO,
         id: Long
     ) {
-       var obj = this.findById(id)
-        updateCity(objDTO, obj)
-
-        clusterRepository.save(obj)
-    }
-
-    protected fun updateName(
-            newObjDTO: ClusterNewDTO,
-            obj: Cluster) {
-        if (newObjDTO.name != "") {
-            obj.name = newObjDTO.name?:obj.name
-        }
-
-        // Add exception handler when the new name is empty
-    }
-
-    protected fun updateCity(
-            objDTO: ClusterNewDTO,
-            obj: Cluster
-    ) {
+        var obj = this.findById(id)
         var city = cityService.findById(objDTO.id_city!!)
         obj.city = city
+
+        clusterRepository.save(obj)
     }
 
     fun deleteById(id: Long) {

@@ -25,20 +25,11 @@ class TypeOfCostAggregationService {
     fun updateName(
         objDTO: TypeOfCostAggregationDTO,
         id: Long) {
-
         var obj = this.findById(id)
-        updateName(objDTO, obj)
-
-        typeOfCostAggregationRepository.save(obj)
-    }
-
-    protected fun updateName(
-        objDTO: TypeOfCostAggregationDTO,
-        obj: TypeOfCostAggregation) {
 
         if (objDTO.name != "") obj.name = objDTO.name
 
-        // Add exception handler for the case when the name is empty
+        typeOfCostAggregationRepository.save(obj)
     }
 
     fun deleteById(id: Long) {

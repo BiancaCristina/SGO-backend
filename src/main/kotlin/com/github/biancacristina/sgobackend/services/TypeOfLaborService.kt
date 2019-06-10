@@ -26,18 +26,10 @@ class TypeOfLaborService {
             objDTO: TypeOfLaborDTO,
             id: Long) {
         var obj = this.findById(id)
-        updateName(objDTO, obj)
 
-        typeOfLaborRepository.save(obj)
-    }
-
-    protected fun updateName(
-        objDTO: TypeOfLaborDTO,
-        obj: TypeOfLabor
-    ) {
         if (objDTO.name != "") obj.name = objDTO.name
 
-        // Add exception handler for the case when the name is empty
+        typeOfLaborRepository.save(obj)
     }
 
     fun deleteById(id: Long) {
