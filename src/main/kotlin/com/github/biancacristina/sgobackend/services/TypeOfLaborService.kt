@@ -22,16 +22,16 @@ class TypeOfLaborService {
         return typeOfLaborRepository.save(obj)
     }
 
-    fun update(
+    fun updateName(
             objDTO: TypeOfLaborDTO,
             id: Long) {
         var obj = this.findById(id)
-        updateData(objDTO, obj)
+        updateName(objDTO, obj)
 
         typeOfLaborRepository.save(obj)
     }
 
-    protected fun updateData(
+    protected fun updateName(
         objDTO: TypeOfLaborDTO,
         obj: TypeOfLabor
     ) {

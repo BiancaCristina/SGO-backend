@@ -38,12 +38,12 @@ class TypeOfLaborResource {
         return ResponseEntity.created(uri).build()
     }
 
-    @RequestMapping(value=["/{id}"], method=[RequestMethod.PUT])
-    fun update(
+    @RequestMapping(value=["/updateName/{id}"], method=[RequestMethod.PUT])
+    fun updateName(
         @PathVariable id: Long,
         @RequestBody objDTO: TypeOfLaborDTO
     ): ResponseEntity<Unit> {
-        typeOfLaborService.update(objDTO, id)
+        typeOfLaborService.updateName(objDTO, id)
 
         return ResponseEntity.noContent().build()
     }

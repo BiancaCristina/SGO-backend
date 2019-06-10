@@ -36,11 +36,11 @@ class StateResource {
         return ResponseEntity.created(uri).build()
     }
 
-    @RequestMapping(value=["/{id}"], method=[RequestMethod.PUT])
-    fun update(
+    @RequestMapping(value=["/updateName/{id}"], method=[RequestMethod.PUT])
+    fun updateName(
             @PathVariable id: Long,
             @Valid @RequestBody objDTO: StateDTO): ResponseEntity<Unit> {
-        stateService.update(objDTO, id)
+        stateService.updateName(objDTO, id)
 
         return ResponseEntity.noContent().build()
     }

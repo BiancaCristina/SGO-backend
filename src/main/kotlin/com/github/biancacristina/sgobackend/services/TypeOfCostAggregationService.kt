@@ -22,17 +22,17 @@ class TypeOfCostAggregationService {
         return typeOfCostAggregationRepository.save(obj)
     }
 
-    fun update(
+    fun updateName(
         objDTO: TypeOfCostAggregationDTO,
         id: Long) {
 
         var obj = this.findById(id)
-        updateData(objDTO, obj)
+        updateName(objDTO, obj)
 
         typeOfCostAggregationRepository.save(obj)
     }
 
-    protected fun updateData(
+    protected fun updateName(
         objDTO: TypeOfCostAggregationDTO,
         obj: TypeOfCostAggregation) {
 

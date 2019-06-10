@@ -25,14 +25,14 @@ class CityService {
         return cityRepository.save(obj)
     }
 
-    fun update(newObjDTO: CityNewDTO, id: Long) {
+    fun updateName(newObjDTO: CityNewDTO, id: Long) {
         var obj = this.findById(id)
-        updateData(newObjDTO, obj)
+        updateName(newObjDTO, obj)
 
         cityRepository.save(obj)
     }
 
-    protected fun updateData(
+    protected fun updateName(
             newObjDTO: CityNewDTO,
             obj: City) {
 

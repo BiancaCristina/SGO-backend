@@ -50,12 +50,12 @@ class CityResource {
         return ResponseEntity.created(uri2).build()
     }
 
-    @RequestMapping(value=["/{id}"], method=[RequestMethod.PUT])
-    fun update(
+    @RequestMapping(value=["/updateName/{id}"], method=[RequestMethod.PUT])
+    fun updateName(
         @PathVariable id: Long,
         @Valid @RequestBody newObjDTO: CityNewDTO
     ): ResponseEntity<Unit> {
-        cityService.update(newObjDTO, id)
+        cityService.updateName(newObjDTO, id)
 
         return ResponseEntity.noContent().build()
     }

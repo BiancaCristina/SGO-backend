@@ -22,14 +22,14 @@ class StateService {
         return stateRepository.save(obj)
     }
 
-    fun update(objDTO: StateDTO, id: Long) {
+    fun updateName(objDTO: StateDTO, id: Long) {
         var obj = this.findById(id)
-        updateData(objDTO, obj)
+        updateName(objDTO, obj)
 
         stateRepository.save(obj)
     }
 
-    protected fun updateData(
+    protected fun updateName(
             objDTO: StateDTO,
             obj: State) {
 

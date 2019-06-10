@@ -62,6 +62,13 @@ class ProjectService {
         obj.estimate_material = objDTO.estimate_material
         obj.estimate_eletronic = objDTO.estimate_eletronic
         obj.estimate_others = objDTO.estimate_others
+
+        // Update the total
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_service?:0.0)
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_infra?:0.0)
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_material?:0.0)
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_eletronic?:0.0)
+        obj.estimate_total = obj.estimate_total?.plus(obj.estimate_others?:0.0)
     }
 
     fun deleteById(id: Long) {
