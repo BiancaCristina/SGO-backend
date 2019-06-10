@@ -3,6 +3,7 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.TypeOfCostAggregation
 import com.github.biancacristina.sgobackend.dto.TypeOfCostAggregationDTO
 import com.github.biancacristina.sgobackend.repositories.TypeOfCostAggregationRepository
+import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -13,7 +14,11 @@ class TypeOfCostAggregationService {
     private lateinit var typeOfCostAggregationRepository: TypeOfCostAggregationRepository
 
     fun findById(id: Long): TypeOfCostAggregation {
-        return typeOfCostAggregationRepository.findById(id).orElse(null)
+        var obj = typeOfCostAggregationRepository.findById(id)
+
+        return obj.orElseThrow { ObjectNotFoundException(
+                "Tipo de agregador de custo não encontrado!")
+        }
     }
 
     fun insert(obj: TypeOfCostAggregation): TypeOfCostAggregation {

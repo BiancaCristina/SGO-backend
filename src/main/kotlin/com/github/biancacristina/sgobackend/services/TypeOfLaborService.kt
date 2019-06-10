@@ -3,6 +3,7 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.TypeOfLabor
 import com.github.biancacristina.sgobackend.dto.TypeOfLaborDTO
 import com.github.biancacristina.sgobackend.repositories.TypeOfLaborRepository
+import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -13,7 +14,11 @@ class TypeOfLaborService {
     private lateinit var typeOfLaborRepository: TypeOfLaborRepository
 
     fun findById(id: Long): TypeOfLabor {
-        return typeOfLaborRepository.findById(id).orElse(null)
+        var obj = typeOfLaborRepository.findById(id)
+
+        return obj.orElseThrow { ObjectNotFoundException(
+                "Tipo de obra não encontrado!")
+        }
     }
 
     fun insert(obj: TypeOfLabor): TypeOfLabor {

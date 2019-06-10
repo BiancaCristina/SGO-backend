@@ -3,6 +3,7 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.State
 import com.github.biancacristina.sgobackend.dto.StateDTO
 import com.github.biancacristina.sgobackend.repositories.StateRepository
+import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -13,7 +14,11 @@ class StateService {
     private lateinit var stateRepository: StateRepository
 
     fun findById(id: Long): State {
-        return stateRepository.findById(id).orElse(null)
+        var obj = stateRepository.findById(id)
+
+        return obj.orElseThrow { ObjectNotFoundException(
+                "Estado não encontrado!")
+        }
     }
 
     fun insert(obj: State): State {

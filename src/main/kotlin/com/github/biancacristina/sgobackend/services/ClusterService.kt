@@ -3,6 +3,7 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.Cluster
 import com.github.biancacristina.sgobackend.dto.ClusterNewDTO
 import com.github.biancacristina.sgobackend.repositories.ClusterRepository
+import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -16,7 +17,11 @@ class ClusterService {
     private lateinit var cityService: CityService
 
     fun findById(id: Long): Cluster {
-        return clusterRepository.findById(id).orElse(null)
+        var obj = clusterRepository.findById(id)
+
+        return obj.orElseThrow { ObjectNotFoundException(
+                "Cluster não encontrado!")
+        }
     }
 
     fun insert(obj: Cluster): Cluster {

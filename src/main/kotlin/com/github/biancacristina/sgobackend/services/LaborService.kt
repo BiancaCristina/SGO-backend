@@ -4,6 +4,7 @@ import com.github.biancacristina.sgobackend.domain.Labor
 import com.github.biancacristina.sgobackend.dto.LaborDTO
 import com.github.biancacristina.sgobackend.dto.LaborUpdateDTO
 import com.github.biancacristina.sgobackend.repositories.LaborRepository
+import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -26,7 +27,11 @@ class LaborService {
     private lateinit var projectService: ProjectService
 
     fun findById(id: Long): Labor {
-        return laborRepository.findById(id).orElse(null)
+        var obj = laborRepository.findById(id)
+
+        return obj.orElseThrow { ObjectNotFoundException(
+                "Obra não encontrada!")
+        }
     }
 
     fun insert(obj: Labor): Labor {

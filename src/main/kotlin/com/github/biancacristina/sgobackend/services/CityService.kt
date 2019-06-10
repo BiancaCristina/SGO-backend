@@ -3,6 +3,7 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.City
 import com.github.biancacristina.sgobackend.dto.CityNewDTO
 import com.github.biancacristina.sgobackend.repositories.CityRepository
+import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -16,7 +17,11 @@ class CityService {
     private lateinit var stateService: StateService
 
     fun findById(id: Long): City {
-        return cityRepository.findById(id).orElse(null)
+        var obj = cityRepository.findById(id)
+
+        return obj.orElseThrow { ObjectNotFoundException(
+                "Cidade não encontrada!")
+        }
     }
 
     fun insert(obj: City): City {

@@ -5,6 +5,7 @@ import com.github.biancacristina.sgobackend.domain.enums.Status
 import com.github.biancacristina.sgobackend.dto.LaborDTO
 import com.github.biancacristina.sgobackend.dto.ProjectNewDTO
 import com.github.biancacristina.sgobackend.repositories.ProjectRepository
+import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -23,7 +24,11 @@ class ProjectService {
     private lateinit var laborService: LaborService
 
     fun findById(id: Long): Project {
-        return projectRepository.findById(id).orElse(null)
+        var obj = projectRepository.findById(id)
+
+        return obj.orElseThrow { ObjectNotFoundException(
+                "Projeto não encontrado!")
+        }
     }
 
     fun insert(objDTO: ProjectNewDTO): Project {
