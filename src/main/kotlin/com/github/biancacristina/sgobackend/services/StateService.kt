@@ -3,8 +3,10 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.State
 import com.github.biancacristina.sgobackend.dto.StateDTO
 import com.github.biancacristina.sgobackend.repositories.StateRepository
+import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityException
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,7 +19,7 @@ class StateService {
         var obj = stateRepository.findById(id)
 
         return obj.orElseThrow { ObjectNotFoundException(
-                "Estado não encontrado!")
+                "Estado não encontrado.")
         }
     }
 
@@ -37,9 +39,14 @@ class StateService {
 
     fun deleteById(id: Long) {
         this.findById(id)
-        stateRepository.deleteById(id)
 
-        // Add exception handler to deal with the case when the deletion is not possible
+        try {
+            stateRepository.deleteById(id)
+        }
+
+        catch(e: DataIntegrityViolationException) {
+            throw DataIntegrityException("Não é possível excluir um estado que possui cidades associadas.")
+        }
     }
 
     fun fromDTO(objDTO: StateDTO): State {

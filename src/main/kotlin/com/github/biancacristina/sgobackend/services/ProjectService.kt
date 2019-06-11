@@ -5,8 +5,10 @@ import com.github.biancacristina.sgobackend.domain.enums.Status
 import com.github.biancacristina.sgobackend.dto.LaborDTO
 import com.github.biancacristina.sgobackend.dto.ProjectNewDTO
 import com.github.biancacristina.sgobackend.repositories.ProjectRepository
+import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityException
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -130,9 +132,14 @@ class ProjectService {
 
     fun deleteById(id: Long) {
         this.findById(id)
-        projectRepository.deleteById(id)
 
-        // Add exception handler for the case when the deletion is not possible
+        try {
+            projectRepository.deleteById(id)
+        }
+
+        catch(e: DataIntegrityViolationException) {
+            throw DataIntegrityException("Não é possível excluir um projeto que possui obras associadas.")
+        }
     }
 
     fun fromDTO(objDTO: ProjectNewDTO): Project {

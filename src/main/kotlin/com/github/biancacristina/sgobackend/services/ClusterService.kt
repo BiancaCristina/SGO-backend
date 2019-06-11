@@ -3,8 +3,10 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.Cluster
 import com.github.biancacristina.sgobackend.dto.ClusterNewDTO
 import com.github.biancacristina.sgobackend.repositories.ClusterRepository
+import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityException
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,7 +22,7 @@ class ClusterService {
         var obj = clusterRepository.findById(id)
 
         return obj.orElseThrow { ObjectNotFoundException(
-                "Cluster não encontrado!")
+                "Cluster não encontrado.")
         }
     }
 
@@ -53,9 +55,14 @@ class ClusterService {
 
     fun deleteById(id: Long) {
         this.findById(id)
-        clusterRepository.deleteById(id)
 
-        // Add exception handler when the deletion is not possible
+        try {
+            clusterRepository.deleteById(id)
+        }
+
+        catch(e: DataIntegrityViolationException) {
+            throw DataIntegrityException("Não é possível excluir um cluster que possui obras associadas.")
+        }
     }
 
     fun fromDTO(newObjDTO: ClusterNewDTO): Cluster {

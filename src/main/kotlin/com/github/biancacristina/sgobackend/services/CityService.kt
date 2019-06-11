@@ -3,8 +3,10 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.City
 import com.github.biancacristina.sgobackend.dto.CityNewDTO
 import com.github.biancacristina.sgobackend.repositories.CityRepository
+import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityException
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,7 +22,7 @@ class CityService {
         var obj = cityRepository.findById(id)
 
         return obj.orElseThrow { ObjectNotFoundException(
-                "Cidade não encontrada!")
+                "Cidade não encontrada.")
         }
     }
 
@@ -40,9 +42,14 @@ class CityService {
 
     fun deleteById(id: Long) {
         this.findById(id)
-        cityRepository.deleteById(id)
 
-        // Add exception handler to deal with the case when the deletion is not possible
+        try {
+            cityRepository.deleteById(id)
+        }
+
+        catch(e: DataIntegrityViolationException) {
+            throw DataIntegrityException("Não é possível excluir uma cidade que possui clusters ou projetos associados.")
+        }
     }
 
     fun fromDTO(newObjDTO: CityNewDTO): City {

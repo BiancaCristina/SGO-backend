@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.servlet.http.HttpServletRequest
+import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityException
 
 @ControllerAdvice
 class ResourceExceptionHandler {
@@ -15,7 +16,7 @@ class ResourceExceptionHandler {
             e: ObjectNotFoundException,
             request: HttpServletRequest
     ): ResponseEntity<StandardError> {
-        // Handle the exception of kind 404
+        // Handle the exception of kind 404 (Not Found)
 
         val err = StandardError(
                 System.currentTimeMillis(),
@@ -27,12 +28,28 @@ class ResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err)
     }
 
+    @ExceptionHandler(DataIntegrityException::class)
+    fun dataIntegrity(
+            e: DataIntegrityException,
+            request: HttpServletRequest
+    ): ResponseEntity<StandardError> {
+        // Handle the exception of kind 400 (Bad Request)
+        val err = StandardError(
+                System.currentTimeMillis(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Integridade de dados",
+                e.message,
+                request.requestURI)
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err)
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun validation(
             e: MethodArgumentNotValidException,
             request: HttpServletRequest
     ): ResponseEntity<StandardError> {
-        // Handle the validations error of kind 500
+        // Handle the validations error of kind 422 (Unprocessable entity)
 
         val err = ValidationError(
                 System.currentTimeMillis(),

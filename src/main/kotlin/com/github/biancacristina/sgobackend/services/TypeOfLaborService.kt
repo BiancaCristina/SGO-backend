@@ -3,8 +3,10 @@ package com.github.biancacristina.sgobackend.services
 import com.github.biancacristina.sgobackend.domain.TypeOfLabor
 import com.github.biancacristina.sgobackend.dto.TypeOfLaborDTO
 import com.github.biancacristina.sgobackend.repositories.TypeOfLaborRepository
+import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityException
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -39,9 +41,14 @@ class TypeOfLaborService {
 
     fun deleteById(id: Long) {
         this.findById(id)
-        typeOfLaborRepository.deleteById(id)
 
-        // Add exception handler for the case when the deletion is not possible
+        try {
+            typeOfLaborRepository.deleteById(id)
+        }
+
+        catch(e: DataIntegrityViolationException) {
+            throw DataIntegrityException("Não é possível excluir tipo de obra que possui obras associadas.")
+        }
     }
 
     fun fromDTO(objDTO: TypeOfLaborDTO): TypeOfLabor {
