@@ -130,8 +130,6 @@ class LaborService {
     fun deleteById(id: Long) {
         this.findById(id)
         laborRepository.deleteById(id)
-
-        // Add exception handler for the case when the deletion is not possible
     }
 
     fun fromDTO(objNewDTO: LaborNewDTO): Labor {
@@ -153,8 +151,6 @@ class LaborService {
                 costAggregation,
                 project
         )
-
-        // Add exception handler for the case when objNewDTO has something NULL
 
         return obj
     }

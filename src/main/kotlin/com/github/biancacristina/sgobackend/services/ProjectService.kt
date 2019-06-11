@@ -127,7 +127,6 @@ class ProjectService {
             laborNewDTO: LaborNewDTO
     ) {
         var obj = this.findById(id)
-        //laborNewDTO.id_project = obj.id
 
         // Add labor
         var labor = laborService.fromDTO(laborNewDTO)
@@ -184,8 +183,6 @@ class ProjectService {
                 city,
                 Status.INDEFINIDO
         )
-
-        // Add exception handler to deal with the parts of this process
 
         return obj
     }

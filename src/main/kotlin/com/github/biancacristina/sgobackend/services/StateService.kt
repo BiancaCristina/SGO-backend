@@ -69,7 +69,6 @@ class StateService {
     }
 
     fun fromDTO(objDTO: StateDTO): State {
-        // Convert a DTO
         var newObj = State(objDTO.id, objDTO.name)
         return newObj
     }
