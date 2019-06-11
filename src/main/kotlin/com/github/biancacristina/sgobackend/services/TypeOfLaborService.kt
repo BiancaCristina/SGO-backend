@@ -53,7 +53,7 @@ class TypeOfLaborService {
             id: Long) {
         var obj = this.findById(id)
 
-        if (objDTO.name != "") obj.name = objDTO.name
+        obj.name = objDTO.name
 
         typeOfLaborRepository.save(obj)
     }

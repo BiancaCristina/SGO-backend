@@ -54,7 +54,7 @@ class CityService {
     fun updateName(newObjDTO: CityNewDTO, id: Long) {
         var obj = this.findById(id)
 
-        if (newObjDTO.name != "") obj.name = newObjDTO.name
+        obj.name = newObjDTO.name
 
         cityRepository.save(obj)
     }

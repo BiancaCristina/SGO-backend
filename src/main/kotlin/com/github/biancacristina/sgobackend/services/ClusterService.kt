@@ -56,7 +56,7 @@ class ClusterService {
             id: Long) {
         var obj = this.findById(id)
 
-        if (newObjDTO.name != "") obj.name = newObjDTO.name?:obj.name
+        obj.name = newObjDTO.name?:obj.name
 
         clusterRepository.save(obj)
     }

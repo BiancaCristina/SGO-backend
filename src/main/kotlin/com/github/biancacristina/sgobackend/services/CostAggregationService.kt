@@ -57,7 +57,7 @@ class CostAggregationService {
     ) {
         var obj = this.findById(id)
 
-        if (objDTO.name != "") obj.name = objDTO.name
+        obj.name = objDTO.name
 
         costAggregationRepository.save(obj)
     }
