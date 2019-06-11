@@ -1,11 +1,13 @@
 package com.github.biancacristina.sgobackend.services
 
 import com.github.biancacristina.sgobackend.domain.Labor
-import com.github.biancacristina.sgobackend.dto.LaborDTO
-import com.github.biancacristina.sgobackend.dto.LaborUpdateDTO
+import com.github.biancacristina.sgobackend.dto.LaborNewDTO
 import com.github.biancacristina.sgobackend.repositories.LaborRepository
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -34,20 +36,36 @@ class LaborService {
         }
     }
 
+    fun findAllPaged(
+            page: Int,
+            linesPerPage: Int,
+            direction: String,
+            orderBy: String
+    ): Page<Labor> {
+        var pageRequest = PageRequest.of(
+                page,
+                linesPerPage,
+                Sort.Direction.valueOf(direction),
+                orderBy
+        )
+
+        return laborRepository.findAll(pageRequest)
+    }
+
     fun insert(obj: Labor): Labor {
         obj.id = 0
 
         return laborRepository.save(obj)
     }
 
-    fun updateEstimate(objDTO: LaborDTO, id: Long) {
+    fun updateEstimate(objNewDTO: LaborNewDTO, id: Long) {
         var obj = this.findById(id)
 
-        obj.estimate_service = objDTO.estimate_service?:obj.estimate_service
-        obj.estimate_infra = objDTO.estimate_infra?:obj.estimate_infra
-        obj.estimate_material = objDTO.estimate_material?:obj.estimate_material
-        obj.estimate_eletronic = objDTO.estimate_eletronic?:obj.estimate_eletronic
-        obj.estimate_others = objDTO.estimate_others?:obj.estimate_others
+        obj.estimate_service = objNewDTO.estimate_service?:obj.estimate_service
+        obj.estimate_infra = objNewDTO.estimate_infra?:obj.estimate_infra
+        obj.estimate_material = objNewDTO.estimate_material?:obj.estimate_material
+        obj.estimate_eletronic = objNewDTO.estimate_eletronic?:obj.estimate_eletronic
+        obj.estimate_others = objNewDTO.estimate_others?:obj.estimate_others
 
         // Add exception handler for the case when is null
 
@@ -116,27 +134,27 @@ class LaborService {
         // Add exception handler for the case when the deletion is not possible
     }
 
-    fun fromDTO(objDTO: LaborDTO): Labor {
-        var typeOfLabor = typeOfLaborService.findById(objDTO.id_typeOfLabor)
-        var cluster = clusterService.findById(objDTO.id_cluster)
-        var costAggregation = costAggregationService.findById(objDTO.id_costAggregation)
-        var project = projectService.findById(objDTO.id_project!!)
+    fun fromDTO(objNewDTO: LaborNewDTO): Labor {
+        var typeOfLabor = typeOfLaborService.findById(objNewDTO.id_typeOfLabor)
+        var cluster = clusterService.findById(objNewDTO.id_cluster)
+        var costAggregation = costAggregationService.findById(objNewDTO.id_costAggregation)
+        var project = projectService.findById(objNewDTO.id_project!!)
 
         System.out.println(typeOfLabor.name)
         var obj = Labor(
-                objDTO.id,
-                objDTO.estimate_service?:0.0,
-                objDTO.estimate_infra?:0.0,
-                objDTO.estimate_material?:0.0,
-                objDTO.estimate_eletronic?:0.0,
-                objDTO.estimate_others?:0.0,
+                objNewDTO.id,
+                objNewDTO.estimate_service?:0.0,
+                objNewDTO.estimate_infra?:0.0,
+                objNewDTO.estimate_material?:0.0,
+                objNewDTO.estimate_eletronic?:0.0,
+                objNewDTO.estimate_others?:0.0,
                 cluster,
                 typeOfLabor,
                 costAggregation,
                 project
         )
 
-        // Add exception handler for the case when objDTO has something NULL
+        // Add exception handler for the case when objNewDTO has something NULL
 
         return obj
     }

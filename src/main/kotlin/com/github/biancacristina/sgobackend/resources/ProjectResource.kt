@@ -1,10 +1,12 @@
 package com.github.biancacristina.sgobackend.resources
 
-import com.github.biancacristina.sgobackend.dto.LaborDTO
+import com.github.biancacristina.sgobackend.domain.Project
+import com.github.biancacristina.sgobackend.dto.LaborNewDTO
+import com.github.biancacristina.sgobackend.dto.ProjectDTO
 import com.github.biancacristina.sgobackend.dto.ProjectNewDTO
 import com.github.biancacristina.sgobackend.services.ProjectService
-import org.apache.coyote.Response
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -22,6 +24,24 @@ class ProjectResource {
         var obj = projectService.findById(id)
 
         return ResponseEntity.ok().body(obj)
+    }
+
+    @RequestMapping(value=["/page"], method=[RequestMethod.GET])
+    fun findAllPage(
+            @RequestParam(value="page", defaultValue= "0") page: Int,
+            @RequestParam(value="linesPerPage", defaultValue= "10") linesPerPage: Int,
+            @RequestParam(value="direction", defaultValue= "DESC") direction: String,
+            @RequestParam(value="orderBy", defaultValue= "id") orderBy: String
+    ): ResponseEntity<Page<ProjectDTO>> {
+        var listPaged: Page<Project> = projectService.findAllPaged(page, linesPerPage, direction, orderBy)
+        var listPagedDTO: Page<ProjectDTO> =
+                listPaged.map { obj -> ProjectDTO(
+                        obj.id,
+                        obj.estimate_startDate,
+                        obj.estimate_endDate,
+                        obj.status.status) }
+
+        return ResponseEntity.ok().body(listPagedDTO)
     }
 
     @RequestMapping(method=[RequestMethod.POST])
@@ -70,10 +90,10 @@ class ProjectResource {
     @RequestMapping(value=["/updateAddLabor/{id}"], method=[RequestMethod.PUT])
     fun updateAddLabor(
         @PathVariable id: Long,
-        @Valid @RequestBody laborDTO: LaborDTO
+        @Valid @RequestBody laborNewDTO: LaborNewDTO
     ): ResponseEntity<Unit> {
-        laborDTO.id_project = id
-        projectService.updateAddLabor(id, laborDTO)
+        laborNewDTO.id_project = id
+        projectService.updateAddLabor(id, laborNewDTO)
 
         return ResponseEntity.noContent().build()
     }

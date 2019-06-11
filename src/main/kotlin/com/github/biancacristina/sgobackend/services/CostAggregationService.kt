@@ -1,13 +1,15 @@
 package com.github.biancacristina.sgobackend.services
 
-import com.github.biancacristina.sgobackend.domain.City
 import com.github.biancacristina.sgobackend.domain.CostAggregation
-import com.github.biancacristina.sgobackend.dto.CostAggregationDTO
+import com.github.biancacristina.sgobackend.dto.CostAggregationNewDTO
 import com.github.biancacristina.sgobackend.repositories.CostAggregationRepository
 import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityException
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -33,9 +35,25 @@ class CostAggregationService {
         return costAggregationRepository.save(obj)
     }
 
+    fun findAllPaged(
+            page: Int,
+            linesPerPage: Int,
+            direction: String,
+            orderBy: String
+    ): Page<CostAggregation> {
+        var pageRequest = PageRequest.of(
+                page,
+                linesPerPage,
+                Sort.Direction.valueOf(direction),
+                orderBy
+        )
+
+        return costAggregationRepository.findAll(pageRequest)
+    }
+
     fun updateName(
-        objDTO: CostAggregationDTO,
-        id: Long
+            objDTO: CostAggregationNewDTO,
+            id: Long
     ) {
         var obj = this.findById(id)
 
@@ -69,7 +87,7 @@ class CostAggregationService {
         }
     }
 
-    fun fromDTO(objDTO: CostAggregationDTO): CostAggregation {
+    fun fromDTO(objDTO: CostAggregationNewDTO): CostAggregation {
         var typeOfCostAggregation = typeOfCostAggregationService
                                     .findById(objDTO.id_typeOfCostAggregation!!)
 

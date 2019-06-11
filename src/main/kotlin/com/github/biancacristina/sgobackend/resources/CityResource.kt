@@ -1,8 +1,12 @@
 package com.github.biancacristina.sgobackend.resources
 
+import com.github.biancacristina.sgobackend.domain.City
+import com.github.biancacristina.sgobackend.domain.State
+import com.github.biancacristina.sgobackend.dto.CityDTO
 import com.github.biancacristina.sgobackend.dto.CityNewDTO
 import com.github.biancacristina.sgobackend.services.CityService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -20,6 +24,19 @@ class CityResource {
         var obj = cityService.findById(id)
 
         return ResponseEntity.ok().body(obj)
+    }
+
+    @RequestMapping(value=["/page"], method=[RequestMethod.GET])
+    fun findAllPage(
+            @RequestParam(value="page", defaultValue= "0") page: Int,
+            @RequestParam(value="linesPerPage", defaultValue= "10") linesPerPage: Int,
+            @RequestParam(value="direction", defaultValue= "DESC") direction: String,
+            @RequestParam(value="orderBy", defaultValue= "name") orderBy: String
+    ): ResponseEntity<Page<CityDTO>> {
+        var listPaged: Page<City> = cityService.findAllPaged(page, linesPerPage, direction, orderBy)
+        var listPagedDTO: Page<CityDTO> = listPaged.map { obj -> CityDTO(obj.id, obj.name) }
+
+        return ResponseEntity.ok().body(listPagedDTO)
     }
 
     @RequestMapping(value=["/{idState}"], method=[RequestMethod.POST])

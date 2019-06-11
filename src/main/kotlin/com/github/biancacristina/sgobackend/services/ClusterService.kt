@@ -7,6 +7,9 @@ import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityExc
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,6 +27,22 @@ class ClusterService {
         return obj.orElseThrow { ObjectNotFoundException(
                 "Cluster não encontrado.")
         }
+    }
+
+    fun findAllPaged(
+            page: Int,
+            linesPerPage: Int,
+            direction: String,
+            orderBy: String
+    ): Page<Cluster> {
+        var pageRequest = PageRequest.of(
+                page,
+                linesPerPage,
+                Sort.Direction.valueOf(direction),
+                orderBy
+        )
+
+        return clusterRepository.findAll(pageRequest)
     }
 
     fun insert(obj: Cluster): Cluster {

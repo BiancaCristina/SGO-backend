@@ -2,13 +2,16 @@ package com.github.biancacristina.sgobackend.services
 
 import com.github.biancacristina.sgobackend.domain.Project
 import com.github.biancacristina.sgobackend.domain.enums.Status
-import com.github.biancacristina.sgobackend.dto.LaborDTO
+import com.github.biancacristina.sgobackend.dto.LaborNewDTO
 import com.github.biancacristina.sgobackend.dto.ProjectNewDTO
 import com.github.biancacristina.sgobackend.repositories.ProjectRepository
 import com.github.biancacristina.sgobackend.services.exceptions.DataIntegrityException
 import com.github.biancacristina.sgobackend.services.exceptions.ObjectNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -33,6 +36,22 @@ class ProjectService {
         }
     }
 
+    fun findAllPaged(
+            page: Int,
+            linesPerPage: Int,
+            direction: String,
+            orderBy: String
+    ): Page<Project> {
+        var pageRequest = PageRequest.of(
+                page,
+                linesPerPage,
+                Sort.Direction.valueOf(direction),
+                orderBy
+        )
+
+        return projectRepository.findAll(pageRequest)
+    }
+
     fun insert(objDTO: ProjectNewDTO): Project {
         var obj = fromDTO(objDTO)
         obj.id = 0
@@ -40,8 +59,8 @@ class ProjectService {
 
         projectRepository.save(obj)
 
-        // Create the labors from objDTO.laborsDTO
-        for (laborDTO in objDTO.laborsDTO!!) {
+        // Create the labors from objDTO.laborsNewDTO
+        for (laborDTO in objDTO.laborsNewDTO!!) {
             laborDTO.id_project = obj.id
             var labor = laborService.fromDTO(laborDTO)
             laborService.insert(labor)
@@ -104,14 +123,14 @@ class ProjectService {
     }
 
     fun updateAddLabor(
-        id: Long,
-        laborDTO: LaborDTO
+            id: Long,
+            laborNewDTO: LaborNewDTO
     ) {
         var obj = this.findById(id)
-        //laborDTO.id_project = obj.id
+        //laborNewDTO.id_project = obj.id
 
         // Add labor
-        var labor = laborService.fromDTO(laborDTO)
+        var labor = laborService.fromDTO(laborNewDTO)
         laborService.insert(labor)
         obj.labors.add(labor)
 
@@ -144,7 +163,7 @@ class ProjectService {
 
     fun fromDTO(objDTO: ProjectNewDTO): Project {
         // Conversion used only for insertion
-        // Also create the labors from the LaborDTO
+        // Also create the labors from the LaborNewDTO
 
         var city = cityService.findById(objDTO.id_city!!)
 

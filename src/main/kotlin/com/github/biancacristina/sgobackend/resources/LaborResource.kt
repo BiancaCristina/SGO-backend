@@ -1,9 +1,11 @@
 package com.github.biancacristina.sgobackend.resources
 
+import com.github.biancacristina.sgobackend.domain.Labor
 import com.github.biancacristina.sgobackend.dto.LaborDTO
-import com.github.biancacristina.sgobackend.dto.LaborUpdateDTO
+import com.github.biancacristina.sgobackend.dto.LaborNewDTO
 import com.github.biancacristina.sgobackend.services.LaborService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -23,19 +25,41 @@ class LaborResource {
         return ResponseEntity.ok().body(obj)
     }
 
+    @RequestMapping(value=["/page"], method=[RequestMethod.GET])
+    fun findAllPage(
+            @RequestParam(value="page", defaultValue= "0") page: Int,
+            @RequestParam(value="linesPerPage", defaultValue= "10") linesPerPage: Int,
+            @RequestParam(value="direction", defaultValue= "DESC") direction: String,
+            @RequestParam(value="orderBy", defaultValue= "id") orderBy: String
+    ): ResponseEntity<Page<LaborDTO>> {
+        var listPaged: Page<Labor> = laborService.findAllPaged(page, linesPerPage, direction, orderBy)
+        var listPagedDTO: Page<LaborDTO> =
+            listPaged.map {
+                obj -> LaborDTO(
+                obj.id,
+                obj.estimate_service,
+                obj.estimate_infra,
+                obj.estimate_material,
+                obj.estimate_eletronic,
+                obj.estimate_others
+        )}
+
+        return ResponseEntity.ok().body(listPagedDTO)
+    }
+
     @RequestMapping(value=["/{idCluster}/{idTypeOfLabor}/{idCostAggregation}"], method=[RequestMethod.POST])
     fun insert(
         @PathVariable idCluster: Long,
         @PathVariable idTypeOfLabor: Long,
         @PathVariable idCostAggregation: Long,
-        @Valid @RequestBody objDTO: LaborDTO
+        @Valid @RequestBody objNewDTO: LaborNewDTO
     ): ResponseEntity<Unit> {
 
-        objDTO.id_cluster = idCluster
-        objDTO.id_typeOfLabor = idTypeOfLabor
-        objDTO.id_costAggregation = idCostAggregation
+        objNewDTO.id_cluster = idCluster
+        objNewDTO.id_typeOfLabor = idTypeOfLabor
+        objNewDTO.id_costAggregation = idCostAggregation
 
-        var obj = laborService.fromDTO(objDTO)
+        var obj = laborService.fromDTO(objNewDTO)
         obj = laborService.insert(obj)
 
         // Create the URI of the object inserted
@@ -60,9 +84,9 @@ class LaborResource {
     @RequestMapping(value=["/updateEstimate/{id}"], method=[RequestMethod.PUT])
     fun updateEstimate(
         @PathVariable id: Long,
-        @Valid @RequestBody objDTO: LaborDTO
+        @Valid @RequestBody objNewDTO: LaborNewDTO
     ): ResponseEntity<Unit> {
-        laborService.updateEstimate(objDTO, id)
+        laborService.updateEstimate(objNewDTO, id)
 
         return ResponseEntity.noContent().build()
     }
