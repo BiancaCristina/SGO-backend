@@ -37,6 +37,7 @@ class LaborResource {
             listPaged.map {
                 obj -> LaborDTO(
                 obj.id,
+                obj.name,
                 obj.estimate_service,
                 obj.estimate_infra,
                 obj.estimate_material,
@@ -55,7 +56,6 @@ class LaborResource {
         @Valid @RequestBody objNewDTO: LaborNewDTO
     ): ResponseEntity<Unit> {
 
-        objNewDTO.id_cluster = idCluster
         objNewDTO.id_typeOfLabor = idTypeOfLabor
         objNewDTO.id_costAggregation = idCostAggregation
 

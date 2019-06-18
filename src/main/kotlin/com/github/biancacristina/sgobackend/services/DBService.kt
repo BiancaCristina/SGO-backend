@@ -20,9 +20,6 @@ class DBService {
     private lateinit var stateRepository: StateRepository
 
     @Autowired
-    private lateinit var clusterRepository: ClusterRepository
-
-    @Autowired
     private lateinit var typeOfLaborRepository: TypeOfLaborRepository
 
     @Autowired
@@ -50,13 +47,6 @@ class DBService {
 
         cityRepository.saveAll(Arrays.asList(c1,c2,c3))
         stateRepository.saveAll(Arrays.asList(e1,e2,e3))
-
-        var clu1 = Cluster(0, "Vila Maria", c1)
-        var clu2 = Cluster(0, "Nova Uberlândia", c1)
-        var clu3 = Cluster(0, "Higienopólis", c3)
-
-        clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
-        cityRepository.saveAll(Arrays.asList(c1,c2,c3))
 
         var tca1 = TypeOfCostAggregation(0, "Ag 1")
         var tca2 = TypeOfCostAggregation(0, "Ag 2")
@@ -107,30 +97,29 @@ class DBService {
         projectRepository.save(p1)
 
         var l1 = Labor(0,
+                "Labor 1",
                 123.12,
                 678.78,
                 988.90,
                 43.10,
                 54.11,
-                clu1,
                 tl1,
                 ca1,
                 p1)
 
         var l2 = Labor(0,
+                "Labor 2",
                 454.21,
                 1000.43,
                 987.12,
                 534.90,
                 745645.45,
-                clu2,
                 tl2,
                 ca2,
                 p1)
 
         costAggregationRepository.saveAll(Arrays.asList(ca1,ca2))
         laborRepository.saveAll(Arrays.asList(l1,l2))
-        clusterRepository.saveAll(Arrays.asList(clu1, clu2, clu3))
         typeOfLaborRepository.saveAll(Arrays.asList(tl1,tl2,tl3))
 
         var labors = mutableSetOf<Labor>()

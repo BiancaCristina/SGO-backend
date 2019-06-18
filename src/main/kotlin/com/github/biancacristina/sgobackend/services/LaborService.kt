@@ -20,9 +20,6 @@ class LaborService {
     private lateinit var typeOfLaborService: TypeOfLaborService
 
     @Autowired
-    private lateinit var clusterService: ClusterService
-
-    @Autowired
     private lateinit var costAggregationService: CostAggregationService
 
     @Autowired
@@ -84,9 +81,6 @@ class LaborService {
         idLabor: Long
     ) {
         var obj = this.findById(idLabor)
-        var cluster = clusterService.findById(idCluster)
-
-        obj.cluster = cluster
 
         laborRepository.save(obj)
     }
@@ -134,19 +128,18 @@ class LaborService {
 
     fun fromDTO(objNewDTO: LaborNewDTO): Labor {
         var typeOfLabor = typeOfLaborService.findById(objNewDTO.id_typeOfLabor)
-        var cluster = clusterService.findById(objNewDTO.id_cluster)
         var costAggregation = costAggregationService.findById(objNewDTO.id_costAggregation)
         var project = projectService.findById(objNewDTO.id_project!!)
 
         System.out.println(typeOfLabor.name)
         var obj = Labor(
                 objNewDTO.id,
+                objNewDTO.name,
                 objNewDTO.estimate_service?:0.0,
                 objNewDTO.estimate_infra?:0.0,
                 objNewDTO.estimate_material?:0.0,
                 objNewDTO.estimate_eletronic?:0.0,
                 objNewDTO.estimate_others?:0.0,
-                cluster,
                 typeOfLabor,
                 costAggregation,
                 project
